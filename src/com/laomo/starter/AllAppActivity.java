@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.laomo.starter.adapter.AllAppsAdapter;
 import com.laomo.starter.db.DatabaseHelper;
@@ -26,6 +27,7 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
     public static final int TYPE_DELETE = 2;
 
     private ProgressBar mProgressBar;
+    private TextView mEmptyView;
     private AllAppsAdapter mAllAppsAdapter;
     private Button mSubmitBtn;
     private Button mCancelBtn;
@@ -41,13 +43,14 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 	mSubmitBtn.setOnClickListener(this);
 	mCancelBtn = (Button) findViewById(R.id.cancel_btn);
 	mCancelBtn.setOnClickListener(this);
-
+	mEmptyView = (TextView) findViewById(R.id.empty_view);
+	getListView().setEmptyView(mEmptyView);
 	mDatabaseManager = new DatabaseManagerImpl<AppInfo>(DatabaseHelper.getInstance(this), AppInfo.class);
 	mType = getIntent().getIntExtra(TYPE, 1);
 	if (TYPE_ADD == mType) {
 	    setTitle(R.string.action_add);
 	} else if (TYPE_DELETE == mType) {
-	    setTitle(R.string.action_add);
+	    setTitle(R.string.action_delete);
 	}
 	new MyAsyncTask().execute();
     }
