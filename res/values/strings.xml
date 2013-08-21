@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Starter</string>
+    <string name="action_add">添加应用</string>
+    <string name="action_delete">删除应用</string>
+    <string name="submit">确定</string>
+    <string name="cancel">取消</string>
+    <string name="no_apps">还没有应用，可以点击菜单键，选择“添加应用”添加更多应用！</string>
+    <string name="about">关于</string>
+    <string name="about_content">应用要解决的问题:有些应用我们不希望或者不需要出现在最近打开程序列表中。从本应用内打开的应用就不会出现在最近打开程序列表中。\n\n作者：老默\n主页：http://lmbj.net</string>
+
+</resources>
