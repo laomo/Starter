@@ -42,7 +42,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	mProgressBar.setVisibility(View.VISIBLE);
 	mEmptyView = (TextView) findViewById(R.id.empty_view);
 	mGridView = (GridView) findViewById(R.id.gridview);
-	mGridView.setEmptyView(mEmptyView);
 	mGridView.setOnItemClickListener(this);
 	mPackageManager = getPackageManager();
 	mDatabaseManager = new DatabaseManagerImpl<AppInfo>(DatabaseHelper.getInstance(this), AppInfo.class);
@@ -86,6 +85,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	    //这个flag就是启动应用不出现在最近应用列表的关键
 	    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 	    startActivity(intent);
+	    finish();
 	}
     }
 
@@ -107,6 +107,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	protected void onPreExecute() {
 	    super.onPreExecute();
 	    mProgressBar.setVisibility(View.VISIBLE);
+	    mEmptyView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -116,9 +117,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 	@Override
 	protected void onPostExecute(List<AppInfo> result) {
+	    mProgressBar.setVisibility(View.GONE);
+	    if (result.isEmpty()) {
+		mEmptyView.setVisibility(View.VISIBLE);
+	    }
 	    mAppsAdapter = new AppsAdapter(MainActivity.this, result);
 	    mGridView.setAdapter(mAppsAdapter);
-	    mProgressBar.setVisibility(View.GONE);
 	}
     }
 }

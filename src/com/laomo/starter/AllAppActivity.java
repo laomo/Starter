@@ -44,7 +44,6 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 	mCancelBtn = (Button) findViewById(R.id.cancel_btn);
 	mCancelBtn.setOnClickListener(this);
 	mEmptyView = (TextView) findViewById(R.id.empty_view);
-	getListView().setEmptyView(mEmptyView);
 	mDatabaseManager = new DatabaseManagerImpl<AppInfo>(DatabaseHelper.getInstance(this), AppInfo.class);
 	mType = getIntent().getIntExtra(TYPE, 1);
 	if (TYPE_ADD == mType) {
@@ -99,6 +98,7 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 	protected void onPreExecute() {
 	    super.onPreExecute();
 	    mProgressBar.setVisibility(View.VISIBLE);
+	    mEmptyView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -106,15 +106,17 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 	    if (TYPE_DELETE == mType) {
 		return mDatabaseManager.find();
 	    }
-	    //if (TYPE_ADD == mType)
 	    return AppUtil.getAllApps(AllAppActivity.this, false);
 	}
 
 	@Override
 	protected void onPostExecute(List<AppInfo> result) {
+	    mProgressBar.setVisibility(View.GONE);
+	    if (result.isEmpty()) {
+		mEmptyView.setVisibility(View.VISIBLE);
+	    }
 	    mAllAppsAdapter = new AllAppsAdapter(AllAppActivity.this, result);
 	    setListAdapter(mAllAppsAdapter);
-	    mProgressBar.setVisibility(View.GONE);
 	}
     }
 }
