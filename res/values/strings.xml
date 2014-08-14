@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">Starter</string>
+    <string name="action_with_sys_app">系统应用可选</string>
+    <string name="action_no_sys_app">系统应用不可选</string>
     <string name="action_add">添加应用</string>
     <string name="action_delete">删除应用</string>
     <string name="submit">确定</string>

@@ -6,6 +6,9 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,6 +36,7 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
     private Button mCancelBtn;
     private DatabaseManager<AppInfo> mDatabaseManager;
     private int mType;
+    private boolean withSystemApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,31 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 		break;
 	}
     }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.getItem(0).setTitle(withSystemApp?R.string.action_no_sys_app:R.string.action_with_sys_app);
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	if(TYPE_ADD == mType){
+    		withSystemApp = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("withSystemApp", false);
+        	menu.add(0, 1, 0, getString(withSystemApp?R.string.action_no_sys_app:R.string.action_with_sys_app));
+        	return true;
+    	}else{
+    		return false;
+    	}
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	withSystemApp = !withSystemApp;
+    	new MyAsyncTask().execute();
+    	PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("withSystemApp", withSystemApp).commit();
+		return true;
+	}
 
     class MyAsyncTask extends AsyncTask<Void, Void, List<AppInfo>> {
 
@@ -106,7 +135,7 @@ public class AllAppActivity extends ListActivity implements OnClickListener {
 	    if (TYPE_DELETE == mType) {
 		return mDatabaseManager.find();
 	    }
-	    return AppUtil.getAllApps(AllAppActivity.this, false);
+	    return AppUtil.getAllApps(AllAppActivity.this, withSystemApp);
 	}
 
 	@Override
